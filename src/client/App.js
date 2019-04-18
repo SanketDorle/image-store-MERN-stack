@@ -28,7 +28,7 @@ export default class App extends Component {
   }
 
   getAllImage(){
-    axios.get(`http://localhost:8080/get-all-images`)
+    axios.get(`/get-all-images`)
     .then(res => {
       console.log(res);
       this.setState({ imagesList: res.data.data })
@@ -64,7 +64,7 @@ export default class App extends Component {
   uploadImages(files){
     var toUplodDocuments = this.state.toUplodDocuments;
 
-    axios.post(`http://localhost:8080/upload-image`, {imageData : toUplodDocuments})
+    axios.post(`/upload-image`, {imageData : toUplodDocuments})
     .then(res => {
       console.log(res);
       this.getAllImage();
@@ -74,7 +74,7 @@ export default class App extends Component {
   }
 
   deleteImage(item){
-    axios.post(`http://localhost:8080/delete-image`, {id : item._id})
+    axios.post(`/delete-image`, {id : item._id})
     .then(res => {
       console.log(res);
       this.getAllImage();

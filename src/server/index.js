@@ -1,6 +1,6 @@
 const express = require('express');
 const os = require('os');
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
