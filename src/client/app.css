@@ -22,3 +22,31 @@ body {
 .full-height{
   height: 100% !important;
 }
+.each-image-col{
+  width: 50%;
+  margin: auto;
+  text-align: left;
+  border-bottom: 1px solid;
+  position: relative;
+}
+.delete-button{
+  width: 100px;
+  height: 50px;
+  font-size: 17px;
+  color: #fff;
+  background-color: red;
+  box-shadow: none !important;
+  border: none;
+  position: absolute;
+  top: 55px;
+  right: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.image-list-header{
+  margin: 30px 10px 10px 10px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #aaa;
+  padding: 7px;
+}

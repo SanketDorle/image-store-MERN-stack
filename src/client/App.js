@@ -14,7 +14,6 @@ export default class App extends Component {
 		super(props);
     this.state = { 
       imagesList : [],
-      toUplodDocuments : [],
       uploadError : [],
      };
     this.uploadAttachments = this.uploadAttachments.bind(this);
@@ -31,7 +30,8 @@ export default class App extends Component {
     axios.get(`/get-all-images`)
     .then(res => {
       console.log(res);
-      this.setState({ imagesList: res.data.data })
+      var sortData = this.sortByIndex(res.data.data);
+      this.setState({ imagesList: sortData })
     })
   }
 
@@ -44,7 +44,7 @@ export default class App extends Component {
         const reader = new FileReader();
         
         reader.onload = (event) => {
-          docList.push({
+          this.uploadImages({
             "imageBase64" : event.target.result,
             "fileType" : file.type
           });
@@ -56,19 +56,14 @@ export default class App extends Component {
         toast.error(`Your File ${file.name} is not image, Please upload only PNG,JEPG,JPG file type`);
       }
 		})
-    this.setState({
-      toUplodDocuments : docList,
-    })
   }
 
-  uploadImages(files){
-    var toUplodDocuments = this.state.toUplodDocuments;
+  uploadImages(file){
 
-    axios.post(`/upload-image`, {imageData : toUplodDocuments})
+    axios.post(`/upload-image`, file)
     .then(res => {
       console.log(res);
       this.getAllImage();
-      this.setState({ toUplodDocuments: [] })
       debugger
     })
   }
@@ -82,12 +77,20 @@ export default class App extends Component {
     })
   }
 
+  sortByIndex(array) {
+		return array.sort(function (a, b) {
+			var x = a['uploadedTime']; 
+			var y = b['uploadedTime'];
+			return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+		});	
+	}
+
   render() {
     const containerStyle = {
       zIndex: 1999
     };
 
-    var {toUplodDocuments, imagesList} = this.state;
+    var { imagesList} = this.state;
     return (
       <div>
         <ToastContainer position="top-right" autoClose={5000} style={containerStyle}/>
@@ -102,26 +105,16 @@ export default class App extends Component {
               </section>
             )}
           </Dropzone>
-          <Row>
-            {  toUplodDocuments.map((image)=>{
-              <Col className="col-4">
-                <img src={image.imageBase64} alt="Smiley face" width="100" height="100"/>
-              </Col>
-            })}
-          </Row>
-          <Row>
-            <Col>
-              <Button onClick={this.uploadImages}>Upload</Button>
-            </Col>
-          </Row>
         </Row>
-        <Row align="center">Image List</Row>
+        <Row align="center" className="image-list-header">Image List</Row>
         <Row>
           {  imagesList.map((image)=>{
-            <Col className="col-4">
-              <img src={image.imageString} alt="Smiley face" width="100" height="100"/>
-              <Button onClick={()=>this.deleteImage(image)}>Delete</Button>
-            </Col>
+            return(
+              <Col className="each-image-col">
+                <img src={image.imageString} alt="Smiley face" width="150" height="150"/>
+                <Button className="delete-button" onClick={()=>this.deleteImage(image)}>Delete</Button>
+              </Col>
+            )
           })}
         </Row>
       </div>
